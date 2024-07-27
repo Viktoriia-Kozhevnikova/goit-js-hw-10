@@ -3,7 +3,6 @@ import "flatpickr/dist/flatpickr.min.css";
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
-
 const datetimePicker = document.querySelector("#datetime-picker");
 const btnStart = document.querySelector("button[data-start]");
 const timerFields = {
@@ -14,6 +13,7 @@ const timerFields = {
 };
 
 let userSelectedDate = null;
+let timerInterval = null;
 
 const options = {
   enableTime: true,
@@ -37,7 +37,6 @@ const options = {
   }
 };
 
-
 flatpickr(datetimePicker, options);
 
 btnStart.disabled = true;
@@ -49,14 +48,13 @@ function startOfCountdown() {
     btnStart.disabled = true;
     datetimePicker.disabled = true;
 
-   
-    const timerInterval = setInterval(() => {
+    timerInterval = setInterval(() => {
       const now = new Date();
       const timeDifference = userSelectedDate - now;
 
       if (timeDifference <= 0) {
         clearInterval(timerInterval);
-        updateTimerDisplay(0, 0, 0, 0);
+        enableDatePicker();
         return;
       }
 
@@ -89,4 +87,9 @@ function convertMs(ms) {
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
+}
+
+function enableDatePicker() {
+  datetimePicker.disabled = false;
+  btnStart.disabled = true;
 }
